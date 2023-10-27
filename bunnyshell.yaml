@@ -1,0 +1,58 @@
+kind: Environment
+name: DDev_papafam-nextjs-redis-aws
+type: primary
+environmentVariables:
+    NEXT_PUBLIC_BNS_INGRESS_URL_NEXT_APP_0: next-app-7fgzqv.bunnyenv.com/
+    redis: redis
+    redis_pass: '<<BNS_SECRET>>'
+components:
+    -
+        kind: Application
+        name: next-app
+        gitRepo: 'https://github.com/GAlexandruD/papafam-nextjs-redis-demo.git'
+        gitBranch: main
+        gitApplicationPath: next-app
+        dockerCompose:
+            build:
+                context: ./next-app
+                dockerfile: dev.Dockerfile
+                args:
+                    ENV_VARIABLE: production_server_only_variable
+                    NEXT_PUBLIC_ENV_VARIABLE: production_public_variable
+            ports:
+                - '3000:3000'
+            restart: always
+            environment:
+                NEXT_PUBLIC_BUNNY_LINK: CHANGEME.COM/
+        hosts:
+            -
+                hostname: 'next-app-{{ env.base_domain }}'
+                path: /
+                servicePort: 3000
+    -
+        kind: Service
+        name: redis
+        dockerCompose:
+            image: 'redis:7.2'
+            ports:
+                - '6379:6379'
+        volumes:
+            -
+                name: redis-data
+                mount: /data
+                subPath: ''
+    -
+        kind: Service
+        name: alpine
+        dockerCompose:
+            image: 'alpine:latest'
+            command: 'sleep 3600'
+volumes:
+    -
+        name: data-volume
+        size: 1Gi
+        type: disk
+    -
+        name: redis-data
+        size: 100Mi
+        type: disk
