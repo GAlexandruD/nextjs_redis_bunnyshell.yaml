@@ -2,7 +2,6 @@ kind: Environment
 name: DDev_papafam-nextjs-redis-aws
 type: primary
 environmentVariables:
-    NEXT_PUBLIC_BNS_INGRESS_URL_NEXT_APP_0: next-app-7fgzqv.bunnyenv.com/
     redis: redis
     redis_pass: '<<BNS_SECRET>>'
 components:
@@ -23,7 +22,7 @@ components:
                 - '3000:3000'
             restart: always
             environment:
-                NEXT_PUBLIC_BUNNY_LINK: CHANGEME.COM/
+                NEXT_PUBLIC_BUNNY_LINK: 'next-app-{{ env.base_domain }}'
         hosts:
             -
                 hostname: 'next-app-{{ env.base_domain }}'
