@@ -1,9 +1,9 @@
 kind: Environment
-name: DDev_papafam-nextjs-redis-aws
+name: Change-My-Name
 type: primary
 environmentVariables:
     redis: redis
-    redis_pass: '<<BNS_SECRET>>'
+    redis_pass: 'safePassword'
 components:
     -
         kind: Application
